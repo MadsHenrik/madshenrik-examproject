@@ -27,7 +27,7 @@ Download the necessary framworks
   
 Backend:
 
-  -In a second terminal in the backendfolder type ```venv/scripts/activate``` followed by ```py appserver.py```  to start the app
+  -In a second terminal in the backend folder type ```venv/scripts/activate``` followed by ```py appserver.py```  to start the app
   
 Frontend: 
 
