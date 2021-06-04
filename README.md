@@ -27,11 +27,11 @@ Download the necessary framworks
   
 Backend:
 
-  -In a second terminal type ```venv/scripts/activate``` followed by ```py appserver.py``` in the backend folder to start the app
+  -In a second terminal in the backendfolder type ```venv/scripts/activate``` followed by ```py appserver.py```  to start the app
   
 Frontend: 
 
-  -In one terminal ```run npm run dev``` command in highfire-spa folder
+  -In one terminal in the highfire-spa folder ```run npm run dev``` command
   
 
 ## Functions of the website:
