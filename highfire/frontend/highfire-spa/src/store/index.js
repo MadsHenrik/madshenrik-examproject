@@ -104,7 +104,6 @@ const mutations = {
     state.currentPost = payload.post
   },
   setUserData (state, payload) {
-    console.log('setUserData payload = ', payload)
     state.userData = payload.userData
   },
   logOut(state){
