@@ -56,3 +56,6 @@ Frontend:
 -Log in/log out. On the navbar there is a dropdown menu which either shows login and register, or log out, depending on if the user is signed in or not. Log in takes the user to the login page where it can log in. When the user is logged in it is given a jwt token in localstorage. This token is necessary for doing stuff like posting post, liking posts, commenting on posts as well as deleting posts and comments. When the user is logged in log out is shown instead of login and register. This button deletes the users token from localstorage.
 
 -Automatically routed to login if you try to do something that needs a valid user. The token in localstorage will be deleted (if it is there), as it has either expired or is invalid. 
+
+## Guide that helped me build start of website
+I used this guide: https://stackabuse.com/single-page-apps-with-vue-js-and-flask-setting-up-vue-js to start setting up the website
