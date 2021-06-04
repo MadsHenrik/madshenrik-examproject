@@ -52,7 +52,7 @@ def fetch_posts():
 
 @api.route('/posts/<int:id>/', methods=('GET', )) #get the post the user has routed to
 def fetch_post(id):
-    post = Post.query.get(id)
+    post = Post.query.filter_by(deleted=False,id=id).first()
     return jsonify({ 'post': post.to_dict() })
 
 @api.route('/posts/', methods=('POST',)) #create a new post with the data that is sent in from the clientside

@@ -68,7 +68,7 @@ export default {
     },
     like(){ //computed if the user has liked this post using the liked() method
         return this.liked()
-    }
+    },
   }),
   
   
