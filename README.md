@@ -25,11 +25,11 @@ Forum for e-sports team
 ## How to run the website:
 Download the necessary framworks
   
-backend:
+Backend:
 
   -In a second terminal type ```venv/scripts/activate``` followed by ```py appserver.py``` in the backend folder to start the app
   
-frontend: 
+Frontend: 
 
   -In one terminal ```run npm run dev``` command in highfire-spa folder
   
