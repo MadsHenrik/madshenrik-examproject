@@ -19,14 +19,14 @@ let state = {
 const actions = {
   // asynchronous operations
   //loadPosts calls fetchPosts from api/index.js and commits setPosts mutation with the response from fetchPosts
-  async loadPosts(context) {
-    const response = await fetchPosts();
-    context.commit('setPosts', {posts: response})
+  loadPosts(context) {
+    return fetchPosts()
+      .then(response => context.commit('setPosts', {posts: response}))
   },
   //loadPost calls fetchPost with desired postId from api/index.js and commits setPost mutation with the response from fetchPost
-  async loadPost(context, { id }) {
-    const response = await fetchPost(id);
-    context.commit('setPost', {post: response})
+  loadPost(context, { id }) {
+    return fetchPost(id)
+      .then(response => context.commit('setPost', {post: response}))
   },
   //login takes in a username and password (inside the user variable), commits mutation userdata, runs authenticate, then dispatches loginChecker. 
   //If there is a error, log the error, and dispatch errorMessage(which sets errorMsg in state)

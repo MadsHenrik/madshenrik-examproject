@@ -6,7 +6,7 @@ api.py
 
 from  functools import wraps
 from datetime import  datetime, timedelta
-from flask import Blueprint, jsonify, request,  current_app
+from flask import Blueprint, json, jsonify, request,  current_app
 from .models import db, Post, Comments,  User, Likes
 import jwt
 
@@ -53,6 +53,8 @@ def fetch_posts():
 @api.route('/posts/<int:id>/', methods=('GET', )) #get the post the user has routed to
 def fetch_post(id):
     post = Post.query.filter_by(deleted=False,id=id).first()
+    if not post:
+      return jsonify({'error': 'Post does not exist'}), 401
     return jsonify({ 'post': post.to_dict() })
 
 @api.route('/posts/', methods=('POST',)) #create a new post with the data that is sent in from the clientside

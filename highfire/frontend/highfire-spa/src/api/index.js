@@ -23,6 +23,10 @@ export async function fetchPost (postId) {
   if (response.status == 200) { //if the fetch goes through
     return await response.json(); //return the reponse (post)
   }
+  if (response.status == 401){
+    error = await response.json()
+    throw error
+  }
 }
 
 export async function postNewPost(post, jwt) { //POSTing post via JSON.stringify

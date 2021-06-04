@@ -53,6 +53,7 @@ export default {
   },
   beforeMount() {
     this.$store.dispatch('loadPost', { id: parseInt(this.$route.params.id) }) //load the post when loading the page
+      .catch(() => this.$router.push('/'))
   },
   computed: mapState({
     post: state => state.currentPost,
