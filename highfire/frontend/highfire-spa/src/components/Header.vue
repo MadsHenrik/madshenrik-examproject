@@ -27,10 +27,6 @@
               <a class="nav-link disabled text-warning-50 " href="#" tabindex="-1" aria-disabled="true">Shop</a>
             </li>
           </ul>
-          <form class="form-inline my-2 my-lg-0">
-            <input v-model="sok" class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
-            <router-link :to="{name: 'Homesok', params: { sok: this.sok }}" class="btn btn-warning">Search</router-link>
-          </form>
           <div class="nav-item dropdown">
             <a class="nav-link dropdown-toggle text-warning" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 Account
@@ -48,7 +44,7 @@
                   </router-link>
                 </div>
                 <div v-if="isAuthenticated">
-                  <router-link to="/logout/" class="dropdown-item">
+                  <router-link to="/logout" class="dropdown-item">
                     Log out
                   </router-link>
                 </div>
@@ -62,16 +58,22 @@
   export default {
     data(){
       return {
-        sok: ''
       }
     },
     name: 'app-header',
     computed: {
       isAuthenticated () {
-        return this.$store.getters.isAutenticated
+        return this.$store.state.isLoggedIn
       },
     },
     methods: {
     },
+    beforeMount(){
+      if (localStorage.getItem('user')){
+        this.$store.state.isLoggedIn = true
+      } else {
+        this.$store.state.isLoggedIn = false
+      }
+    }
   }
 </script>

@@ -68,8 +68,8 @@ class Post(db.Model):
     user_name =  db.Column(db.String(100), db.ForeignKey('users.username'))
     comments = db.relationship('Comments', backref="post", lazy=False)
     likes = db.Column(db.Integer, default=0)
-    liked_by = db.relationship('Likes')
     deleted = db.Column(db.Boolean, default=False)
+    likeRel = db.relationship('Likes', backref="post", lazy=False)
 
     def __init__(self, headline, content):
         self.headline = headline
@@ -83,7 +83,8 @@ class Post(db.Model):
                     user_name=self.user_name,
                     comments=[comment.to_dict() for comment in self.comments],
                     likes=self.likes,
-                    deleted=self.deleted)
+                    deleted=self.deleted,
+                    likeRel=[like.to_dict() for like in self.likeRel],)
 
 class Comments(db.Model):
     __tablename__ = 'comments'

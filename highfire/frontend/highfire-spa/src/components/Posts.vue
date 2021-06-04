@@ -7,10 +7,11 @@
                 <p class='card-text'>{{ post.post['content'] }}</p>
                 <p class='card-text'>Created by: {{ post.post['user_name'] }}</p>
                 <div class="">
-                  <button @click="likePost">Like post</button>
+                  <button v-if="!like" @click="likePost">Like post</button>
+                  <button v-if="like" @click="likePost">Unlike post</button>
                   <button v-if="post.post['user_name']==user.username" class="btn-danger" @click="deletePost">Delete post</button>
                 </div>
-                <p class="card-text">{{ post.post['likes'] }}</p>
+                <p class="card-text">Likes: {{ post.post['likes'] }}</p>
             </div>
         </div>
         <div>
@@ -43,7 +44,7 @@ import { mapState} from "vuex"
 export default {
   data() {
     return {
-      commentText: ''
+      commentText: '',
     }
   },
   beforeMount() {
@@ -60,28 +61,64 @@ export default {
     },
     comments(){
       return this.post.post['comments'].filter(comment => comment.deleted == false)
+    },
+    like(){
+        return this.liked()
     }
   }),
+  
   
   methods: {
     likePost() {
       this.$store.dispatch('addLike', this.$route.params.id)
+        .then(() => this.$router.push('/'))
+        .catch((error) => {
+          this.$store.dispatch('logout',)
+          console.log('Error creating post', error)
+          this.$store.dispatch('errorMessage', error.message)
+          this.$router.push('/login/')
+        })
+      this.like = this.liked()
+
     },
     submitComment() {
       this.$store.dispatch('addComment', {text: this.commentText, post_id: this.$route.params.id})
-        // .then(() => this.$router.push(`/post/${this.$route.params.id}`))
-        // .catch((error) => {
-        //   console.log('Error creating comment', error)
-        //   this.$router.push('/')
-        //})
+        .then(() => this.$router.push('/'))
+        .catch((error) => {
+          this.$store.dispatch('logout',)
+          console.log('Error creating post', error)
+          this.$store.dispatch('errorMessage', error.message)
+          this.$router.push('/login/')
+        })
     },
     deletePost(){
       this.$store.dispatch('removePost', this.$route.params.id)
         .then(() => this.$router.push('/'))
+        .catch((error) => {
+          this.$store.dispatch('logout',)
+          console.log('Error creating post', error)
+          this.$store.dispatch('errorMessage', error.message)
+          this.$router.push('/login/')
+        })
     },
     deleteComment(e){
       this.$store.dispatch('removeComment', e)
-        .then(() => this.$router.push(`/`))
+        .then(() => this.$router.push('/'))
+        .catch((error) => {
+          this.$store.dispatch('logout',)
+          console.log('Error creating post', error)
+          this.$store.dispatch('errorMessage', error.message)
+          this.$router.push('/login/')
+        })
+    },
+    liked(){
+      const array = this.post.post.likeRel
+      for(let i = 0; i < array.length; i++){
+        if (array[i].username  == this.user.username && array[i].liked==1){
+          return  true
+        }
+      }
+      return false
     }
   }
 }

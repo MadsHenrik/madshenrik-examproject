@@ -1,18 +1,6 @@
 // api/index.js
 const API_URL = 'http://127.0.0.1:5000/api';
 
-const posts = [{
-    id: 1,
-    name: 'Sample thread 1',
-    created_at: new Date(2018, 1, 1),
-    content: 'This is the contents of the thread'
-  }, {
-    id: 2,
-    name: 'Sample thread 2',
-    created_at: new Date(2018, 1, 3),
-    content: 'This is the contents of the thread2'
-  }]
-
 export async function fetchPosts() {
   const response = await fetch(`${API_URL}/posts/`, {
     method: "GET",
@@ -41,7 +29,6 @@ export async function fetchPost (postId) {
 }
 
 export async function postNewPost(post, jwt) {
-  console.log(post)
   const response = await fetch(`${API_URL}/posts/`,{
     method: "POST",
     headers: {
@@ -50,6 +37,10 @@ export async function postNewPost(post, jwt) {
     },
     body: JSON.stringify(post)
   })
+  if (response.status == 401){
+    let error = await response.json()
+    throw error
+  }
 }
 
 export async function likePost(id, jwt) {
@@ -61,11 +52,16 @@ export async function likePost(id, jwt) {
     },
     body: JSON.stringify(id)
   })
-  this.$store.dispatch('loadPost', { id: parseInt(id) })
+  if (response.status == 201){
+    return id
+  }
+  if (response.status == 401){
+    let error = await response.json()
+    throw error
+  }
 }
 
 export async function postNewComment(comment, jwt) {
-  console.log(jwt)
   const response = await fetch(`${API_URL}/comments/`, {
     method: "POST",
     headers: {
@@ -74,6 +70,13 @@ export async function postNewComment(comment, jwt) {
     },
     body: JSON.stringify(comment)
   })
+  if (response.status == 201){
+    return comment.post_id
+  }
+  if (response.status == 401){
+    let error = await response.json()
+    throw error
+  }
 }
 
 export async function authenticate (user) {
@@ -90,6 +93,10 @@ export async function authenticate (user) {
     localStorage.setItem('token', JSON.stringify(userToken));
     localStorage.setItem('user', JSON.stringify(token.user));
   }
+  if (response.status == 401){
+    let error = await response.json()
+    throw error
+  }
 }
 
 export async function register (user) {
@@ -101,26 +108,43 @@ export async function register (user) {
     },
     body: JSON.stringify(user)
   });
-  console.log("supp")
+  if (response.status == 401){
+    let error = await response.json()
+    throw error
+  }
   return response
 }
 
-export async function deletePost(id) {
+export async function deletePost(id, jwt) {
   const response = await fetch(`${API_URL}/posts/${id}/`, {
     method: "PUT",
     headers: {
       'Content-Type': 'application/json',
+      'Authorization': `Bearer: ${jwt}`
     },
   })
+  if (response.status == 401){
+    let error = await response.json()
+    throw error
+  }
 }
 
-export async function deleteComment(id) {
+export async function deleteComment(id, jwt) {
   const response = await fetch(`${API_URL}/comment/`, {
     method: "PUT",
     headers: {
       'Content-Type': 'application/json',
+      'Authorization': `Bearer: ${jwt}`
     },
     body: JSON.stringify(id)
   })
+  if (response.status == 201){
+    const comment = await response.json()
+    return comment.Comment.post_id
+  }
+  if (response.status == 401){
+    let error = await response.json()
+    throw error
+  }
 }
 

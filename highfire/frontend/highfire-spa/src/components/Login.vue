@@ -3,6 +3,7 @@
     <div class="">
       <h2 class="">Login</h2>
     </div>
+    <p v-if="errorMsg" class="alert alert-dark">{{errorMsg}}</p>
     <div class="">
       <label class="" for="username">Username:</label>
       <div class="">
@@ -26,8 +27,6 @@
 </template>
 
 <script>
-import { EventBus } from '@/utils'
-
 export default {
   data () {
     return {
@@ -39,16 +38,20 @@ export default {
   methods: {
     authenticate () {
       this.$store.dispatch('login', { username: this.username, password: this.password })
-        .then(() => this.$router.push('/'))
+        .then(() => {
+          if (localStorage.getItem('user')){
+            this.$router.push('/') 
+          } else {
+            this.setError()
+          }
+        })
+    },
+    setError(){
+      this.errorMsg = this.$store.state.errorMsg
     }
   },
-  mounted () {
-    EventBus.$on('failedAuthentication', (msg) => {
-      this.errorMsg = msg
-    })
-  },
-  beforeDestroy () {
-    EventBus.$off('failedAuthentication')
+  beforeMount(){
+    this.setError()
   }
 }
 </script>

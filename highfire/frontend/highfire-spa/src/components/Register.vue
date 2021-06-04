@@ -3,6 +3,7 @@
     <div class="">
         <h2 class="">Register</h2>
     </div>
+        <p v-if="errorMsg" class="alert alert-dark">{{errorMsg}}</p>
     <div class="">
         <label class="" for="username">Username:</label>
         <div class="">
@@ -26,8 +27,6 @@
 </template>
 
 <script>
-import { EventBus } from '@/utils'
-
 export default {
   data () {
     return {
@@ -39,16 +38,23 @@ export default {
   methods: {
     register () {
       this.$store.dispatch('register', { username: this.username, password: this.password })
-        .then(() => this.$router.push('/login/'))
+        .then(() => {
+          if (this.$store.state.errorMsg == ''){
+            this.$router.push('/login/')
+          } else {
+            console.log(this.$store.state.errorMsg)
+            console.log(this.errorMsg)
+            this.setError()
+          }
+        })
+    },
+    setError(){
+      this.errorMsg = this.$store.state.errorMsg
     }
   },
-  mounted () {
-    EventBus.$on('failedRegistering', (msg) => {
-      this.errorMsg = msg
-    })
-  },
-  beforeDestroy () {
-    EventBus.$off('failedRegistering')
+  beforeMount(){
+    this.setError()
   }
+
 }
 </script>

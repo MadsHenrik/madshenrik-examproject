@@ -53,7 +53,6 @@ def fetch_posts():
 @api.route('/posts/<int:id>/', methods=('GET', ))
 def fetch_post(id):
     post = Post.query.get(id)
-    
     return jsonify({ 'post': post.to_dict() })
 
 @api.route('/posts/', methods=('POST',))
@@ -69,10 +68,13 @@ def create_post(current_user): #no får dinna inn name og content men den bruka 
 @api.route('/register/', methods=('POST',))
 def register():
   data = request.get_json()
-  user = User(**data)
-  db.session.add(user)
-  db.session.commit()
-  return jsonify(user.to_dict()), 201
+  if(User.query.filter_by(username=data['username']).first()):
+    return jsonify({'error': "Username must be unike"}), 401
+  else:
+    user = User(**data)
+    db.session.add(user)
+    db.session.commit()
+    return jsonify(user.to_dict()), 201
 
 @api.route('/login/',  methods=('POST',))
 def login():
@@ -117,7 +119,7 @@ def likePost(currentuser):
       post.likes = post.likes + 1
       db.session.add(newLike)
     db.session.commit()
-    return jsonify({ 'post': post.to_dict() })
+    return jsonify({ 'post': post.to_dict() }), 201
 
 @api.route('/comments/', methods=('POST',))
 @token_required
@@ -129,10 +131,10 @@ def create_comment(currentUser):
   db.session.commit()
   return jsonify(comment.to_dict()), 201
 
-@api.route('/posts/<int:id>/', methods=('PUT', ))
+@api.route('/posts/<int:postid>/', methods=('PUT', ))
 @token_required
-def delete_post(id, currentUser):
-    post = Post.query.get(id)
+def delete_post(currentuser, postid):
+    post = Post.query.get(postid)
     post.deleted = True
     db.session.commit()
     return jsonify({ 'post': post.to_dict() })
@@ -144,4 +146,4 @@ def delete_comment(currentUser):
     comment = Comments.query.get(commentId)
     comment.deleted = True
     db.session.commit()
-    return jsonify({ 'Comment': comment.to_dict() })
+    return jsonify({ 'Comment': comment.to_dict() }), 201

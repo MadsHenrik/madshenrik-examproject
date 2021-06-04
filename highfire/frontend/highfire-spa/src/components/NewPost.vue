@@ -44,8 +44,10 @@ export default {
       postNewPost(this.post, localStorage.getItem('token'))
         .then(() => this.$router.push('/'))
         .catch((error) => {
+          this.$store.dispatch('logout',)
           console.log('Error creating post', error)
-          this.$router.push('/')
+          this.$store.dispatch('errorMessage', error.message)
+          this.$router.push('/login/')
         })
     }
   },
