@@ -6,25 +6,17 @@
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
         </button>
-      
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
           <ul class="navbar-nav mr-auto">
             <li class="nav-item active">
               <router-link to="/" class="text-warning nav-link">
                   Home
               </router-link>
-              <!--<a class="nav-link text-warning" href="#">Home <span class="sr-only">(current)</span></a>-->
             </li>
             <li class="nav-item">
               <router-link to="/post" class="text-warning nav-link">
                 New Post
               </router-link>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link text-warning" href="#">About</a>
-              </li>
-            <li class="nav-item">
-              <a class="nav-link disabled text-warning-50 " href="#" tabindex="-1" aria-disabled="true">Shop</a>
             </li>
           </ul>
           <div class="nav-item dropdown">
@@ -32,9 +24,6 @@
                 Account
               </a>
               <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                <a class="dropdown-item" href="#">Profile</a>
-                <a class="dropdown-item" href="#">Settings</a>
-                <div class="dropdown-divider"></div>
                 <div v-if="!isAuthenticated">
                   <router-link to="/login" class="dropdown-item">
                     Login
@@ -56,22 +45,16 @@
 
 <script>
   export default {
-    data(){
-      return {
-      }
-    },
-    name: 'app-header',
+    name: 'app-header', 
     computed: {
       isAuthenticated () {
-        return this.$store.state.isLoggedIn
+        return this.$store.state.isLoggedIn //compute the value of isLoggedIn to see if logout or login and register should be shown
       },
     },
-    methods: {
-    },
     beforeMount(){
-      if (localStorage.getItem('user')){
+      if (localStorage.getItem('user')){ //if there is a user saved in localstorage, the user is logged in. isLoggedIn is true
         this.$store.state.isLoggedIn = true
-      } else {
+      } else { //if there is no user saved in localstorage, isLoggedIn is false
         this.$store.state.isLoggedIn = false
       }
     }

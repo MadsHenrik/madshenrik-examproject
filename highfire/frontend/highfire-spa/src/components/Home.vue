@@ -5,7 +5,7 @@
         <select id="sort" name="sort" v-model="sortBy" @change="onChange">
           <option v-for="option in sort" :value="option.value" :key="option.value" :selected="sortBy==option.value">{{ option.name }}</option>
         </select>
-        <form class="form-inline my-2 my-lg-0">
+        <form class="form-inline">
           <input v-model="sok" class="form-control mr-sm-2 mb-2" type="search" placeholder="Search" aria-label="Search">
         </form>
       </div>
@@ -25,22 +25,20 @@
       </div>
     </div>
 </template>
-<!--Mangler å legge inn sort by og kommentarcount og likecount så ser dinna ok ut-->
 <script>
-  import { mapState } from 'vuex'
   export default {
     data: function(){
       return {
       sortBy: '',
-      sok: '',
-      sort: [
+      sok: '', //this is used to filter the posts based on what is typed in to the searchbar
+      sort: [ //saving names and values for all the things we can sort by. Easy to expand (but would need new sorting functions for the new values)
 	      {name: 'Likes', value: 'likes'},
         {name: 'Recent', value: 'recent'},
         {name: 'Comments', value: 'comments'},
         ]
       }
     },
-    methods: {
+    methods: { //sort function sort based on different criteria
       sortedPostsLikes(){
         this.$store.state.posts.posts.sort((a,b) => (a.likes > b.likes) ? -1 : ((b.likes > a.likes) ? 1 : 0))
       },
@@ -50,15 +48,15 @@
       sortedPostsComment(){
         this.$store.state.posts.posts.sort((a,b) => (a.comments.filter(c => !c.deleted).length > b.comments.filter(c => !c.deleted).length) ? -1 : ((b.comments.filter(c => !c.deleted).length > a.comments.filter(c => !c.deleted).length) ? 1 : 0))
       },
-      onChange() {
+      onChange() { //this function changes the sortPref that is in local storage to the value of the selectbox
         localStorage.setItem('sortPref', this.sortBy)
       }
     },
     computed: {
       posts(){
-        return this.$store.state.posts
+        return this.$store.state.posts //gets a list of posts from state
       },
-      sorts() {
+      sorts() { //sorts the list of posts based on the value of the selectbox
         if (this.posts.posts){
           if (this.sortBy == 'recent'){
             return this.posts.posts.sort((a,b) => (a.created_at > b.created_at) ? -1 : ((b.created_at > a.created_at) ? 1 : 0))
@@ -69,7 +67,7 @@
           }
         }
       },
-      sokPosts() {
+      sokPosts() { //filter out posts whos headline does not contain the search value
         if (this.sok.length > 0){
           return this.sorts.filter(post => post.headline.toLowerCase().includes(this.sok.toLowerCase()))
         } else  {
@@ -77,11 +75,9 @@
         }
       }
     },
-    beforeMount() {
+    beforeMount() { //when the page is mounted posts need to be loaded and the sortBy variable is set to sortPref saved in localstorages
       this.$store.dispatch('loadPosts')
       this.sortBy = localStorage.getItem('sortPref')
-    },
-    watch: {
     }
   }
 </script>

@@ -1,7 +1,7 @@
 <template>
   <div class="container-fluid w-75 pt-2">
-    <div class="columns">
-      <div class="">
+    <div class="">
+
         <h2 class="">New thread</h2>
         <div class="name">
             <div class="field">
@@ -20,7 +20,7 @@
                 <button class="btn btn-secondary active w-25" @click="submitPost">Post</button>
             </div>
         </div>
-      </div>
+
     </div>
   </div>
 </template>
@@ -34,16 +34,17 @@ export default {
     return {
       name:  '',
       contents: '',
-      post: new newPost('','')
+      post: new newPost('','') //creates a class of type newPost (store/post.js)
     }
   },
   methods: {
-    submitPost() {
-      this.post.headline = this.name
+    submitPost() { //when "post" button is clicked this is called to create the post
+      //set the values of the newPost class to the inputted headline and content
+      this.post.headline = this.name 
       this.post.content = this.contents
-      postNewPost(this.post, localStorage.getItem('token'))
-        .then(() => this.$router.push('/'))
-        .catch((error) => {
+      postNewPost(this.post, localStorage.getItem('token')) //call postNewPost from api/index.js with the post class and the token stored in localstorage
+        .then(() => this.$router.push('/')) //when creating a new post we get routed to home where the new post is
+        .catch((error) => { //if there is an error (caused by not being logged in or if token has expired) logout is ran, the error is logged and saved in store and the user is routed to login
           this.$store.dispatch('logout',)
           console.log('Error creating post', error)
           this.$store.dispatch('errorMessage', error.message)

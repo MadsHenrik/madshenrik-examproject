@@ -9,6 +9,7 @@ import Logout from '@/components/Logout'
 
 Vue.use(Router)
 
+//all the paths being used and to what component they take you
 export default new Router({
   mode: "history",
   routes: [
@@ -36,10 +37,6 @@ export default new Router({
       path: '/logout',
       name: 'logout',
       component: Logout
-    }, {
-      path: '/:sok',
-      name: 'Homesok',
-      component: Home
-    }
+    },
   ]
 })
