@@ -50,7 +50,7 @@
       },
       onChange() { //this function changes the sortPref that is in local storage to the value of the selectbox
         localStorage.setItem('sortPref', this.sortBy)
-      }
+      },
     },
     computed: {
       posts(){
@@ -77,7 +77,11 @@
     },
     beforeMount() { //when the page is mounted posts need to be loaded and the sortBy variable is set to sortPref saved in localstorages
       this.$store.dispatch('loadPosts')
-      this.sortBy = localStorage.getItem('sortPref')
+      if (localStorage.getItem('sortPref')) { //this if check if there is a sortPref in localstorage
+        this.sortBy = localStorage.getItem('sortPref')
+      } else { //without this else the page does not show any posts on first load, or if the user deletes sortPref from localstorage
+        this.sortBy = 'recent'
+      }
     }
   }
 </script>

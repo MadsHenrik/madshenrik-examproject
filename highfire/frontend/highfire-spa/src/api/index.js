@@ -97,7 +97,6 @@ export async function authenticate (user) { //this POST is used to create a toke
 }
 
 export async function register (user) { //this post is used to add a new user to the Users table
-  console.log(user)
   const response = await fetch(`${API_URL}/register/`, {
     method: "POST",
     headers: {
